@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Founder Family Tree</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="An interactive 3D tree of startups founded by former employees of Google, PayPal, Stripe, Meta, DeepMind and Revolut. Every founder link is sourced.">
+<meta property="og:title" content="Founder Family Tree">
+<meta property="og:description" content="Which startups did ex-Google, PayPal, Stripe, Meta, DeepMind and Revolut people found? A sourced, interactive 3D tree.">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "./vendor/three/three.module.js",
+  "three/addons/": "./vendor/three/addons/"
+} }
+</script>
+</head>
+<body>
+<div id="stage" aria-hidden="true"></div>
+<div id="labels" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- ───── Title screen ───── -->
+<section id="title" class="title" aria-label="Title">
+  <div class="title-inner">
+    <div class="eyebrow"><span class="eb-bar"></span><span>An interactive, sourced atlas</span><span class="mono" id="asof-title"></span></div>
+    <h1 class="title-h1" aria-label="Founder Family Tree">
+      <span class="line l1"><span class="wipe">FOUNDER</span></span>
+      <span class="line l2"><span class="wipe">FAMILY TREE</span></span>
+    </h1>
+    <p class="title-dek">Which startups were founded by people who once worked at Google, PayPal, Stripe, Meta, DeepMind and Revolut. Every founder link has a public source.</p>
+    <div class="stats" id="title-stats"></div>
+    <div class="title-cta">
+      <button class="btn btn-primary" id="btn-grow" type="button"><span class="btn-ico">▶</span> Watch it grow</button>
+      <button class="btn" id="btn-explore" type="button">Explore the tree</button>
+    </div>
+    <p class="title-foot mono" id="title-foot"></p>
+  </div>
+</section>
+
+<!-- ───── HUD ───── -->
+<header id="hud-top" class="hud-top" hidden>
+  <button class="brand" id="brand" type="button" aria-label="Back to title">
+    <span class="brand-mark"></span>
+    <span class="brand-text">FOUNDER FAMILY TREE</span>
+  </button>
+  <div class="asof mono" id="asof"></div>
+  <div class="hud-actions">
+    <div class="search">
+      <label class="sr" for="q">Search a company or founder</label>
+      <input id="q" type="search" placeholder="Search company or founder" autocomplete="off" spellcheck="false">
+      <ul id="q-results" class="q-results" role="listbox" hidden></ul>
+    </div>
+    <button class="chip-btn" id="btn-filter" type="button" aria-expanded="false">Filter</button>
+    <button class="chip-btn" id="btn-sources" type="button">Sources</button>
+  </div>
+</header>
+
+<nav id="families" class="families" aria-label="Families" hidden></nav>
+
+<aside id="filters" class="filters" hidden aria-label="Filters">
+  <div class="f-head"><span>FILTER</span><button class="x" id="f-close" type="button" aria-label="Close filters">×</button></div>
+  <div class="f-group"><div class="f-lbl mono">SECTOR</div><div class="f-chips" id="f-sector"></div></div>
+  <div class="f-group"><div class="f-lbl mono">COUNTRY</div><div class="f-chips" id="f-country"></div></div>
+  <div class="f-group"><div class="f-lbl mono">LEAF SIZE</div>
+    <div class="seg" role="radiogroup" aria-label="Leaf size">
+      <button type="button" role="radio" aria-checked="true" data-size="funding" id="size-funding">Funding raised</button>
+      <button type="button" role="radio" aria-checked="false" data-size="value" id="size-value">Valuation / exit</button>
+    </div>
+    <p class="f-note">Leaves without a public figure are drawn small and dim.</p>
+  </div>
+  <button class="f-reset" id="f-reset" type="button">Clear filters</button>
+</aside>
+
+<div id="legend" class="legend" hidden>
+  <div class="lg-row"><i class="dot gold"></i>Unicorn or IPO</div>
+  <div class="lg-row"><i class="dot green"></i>Active</div>
+  <div class="lg-row"><i class="dot blue"></i>Acquired</div>
+  <div class="lg-row"><i class="dot ember"></i>Shut down</div>
+  <div class="lg-row lg-sub mono" id="lg-size">Size = funding raised</div>
+</div>
+
+<div id="ticker" class="ticker" aria-live="polite"></div>
+
+<div id="card-host" class="card-host"></div>
+
+<footer id="timeline" class="timeline" hidden>
+  <button class="tl-play" id="tl-play" type="button" aria-label="Play time-lapse">▶</button>
+  <div class="tl-year"><span id="tl-year">2026</span><span class="tl-sub mono" id="tl-count"></span></div>
+  <div class="tl-track">
+    <label class="sr" for="tl-range">Year</label>
+    <input id="tl-range" type="range" min="2002" max="2026.79" step="0.01" value="2026.79">
+    <div class="tl-ticks mono" id="tl-ticks"></div>
+  </div>
+</footer>
+
+<!-- ───── Sources panel ───── -->
+<section id="sources" class="sources" hidden aria-label="Sources">
+  <div class="src-inner">
+    <div class="src-head">
+      <div>
+        <div class="eyebrow"><span class="eb-bar"></span><span>Sources &amp; method</span></div>
+        <h2>Every link, every number</h2>
+        <p class="mono src-asof" id="src-asof"></p>
+      </div>
+      <button class="x big" id="src-close" type="button" aria-label="Close sources">×</button>
+    </div>
+    <div class="method" id="method"></div>
+    <div class="src-list" id="src-list"></div>
+  </div>
+</section>
+
+<noscript><p style="color:#fff;padding:24px">This visual needs JavaScript and WebGL.</p></noscript>
+<script src="js/data.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
