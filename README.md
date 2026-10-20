@@ -2,7 +2,7 @@
 
 An interactive 3D tree of startups founded by former employees of **Google, PayPal, Stripe, Meta, DeepMind and Revolut**. Each big company is a glowing trunk, and branches grow out to the startups its alumni went on to found. Every founder-to-company link has a public source.
 
-**Try it:** https://YOUR-USERNAME.github.io/founder-family-tree/
+**Try it:** https://arikhanacademic-cpu.github.io/founder-family-tree/
 
 Data as of **15 October 2026**. 48 startups, 78 founders, 96 unique source URLs.
 
